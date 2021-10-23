@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="http://dcdn.lordswm.com/hwmicon.ico">
 </head>
 <style>
-h1 {
+h3 {
  font-family: Helvetica, sans-serif;
 }
 
@@ -44,21 +44,14 @@ div {
 </style>
 <body>
 
-<h1><font color="white">  Download new excel with URLs that never die</font></h1>
-<hr>
-<div>
-    <br>
+<h3>
     <font color="white">
-    <form action="/ProcessExcel" method="post" enctype="multipart/form-data" target="_blank">
-        <input type="hidden" name="access_token" value="{{access_token}}" />
-        <label for="file">File:</label>
-        <input type="file" id="file" name="file">
-        <br>
-        <br>
-        <input type="submit" value="Submit">
-    </form>
+        Hey {{user_name}} ({{email}})!<br>  Once file is processed, it would be sent to your mail!
     </font>
     <br>
-</div>
+    <font color="white">
+        To process another file, click <b><a href="https://breezy-hr.herokuapp.com/">here</a></b>!
+    </font>
+</h3>
 </body>
 </html>

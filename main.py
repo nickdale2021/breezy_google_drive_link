@@ -57,7 +57,8 @@ def index():
 def oauth2callback():
     # access drive api using developer credentials
     flow = client.flow_from_clientsecrets('client_id.json',
-                                          scope='https://www.googleapis.com/auth/drive',
+                                          scope=['https://www.googleapis.com/auth/drive',
+                                                 'https://www.googleapis.com/auth/userinfo.email'],
                                           redirect_uri=flask.url_for('oauth2callback', _external=True))
     flow.params['include_granted_scopes'] = 'true'
     if 'code' not in flask.request.args:
@@ -86,9 +87,17 @@ def process_excel():
     # print(flask.request.form)
     file_name = received_file.filename
     received_file.save(os.path.join(directory, file_name))
-    new_file_name = file_processor.process_spreadsheet(file_name)
+    # new_file_name = file_processor.process_spreadsheet(file_name)
+    user_name, user_email = google_drive.get_user_info(access_token, user_refresh_token)
+    file_processor.file_handler(file_name, access_token, user_refresh_token, user_name, user_email)
     # new_file_name = file_name
-    return flask.send_from_directory(directory, new_file_name, as_attachment=True)
+    # return flask.send_from_directory(directory, new_file_name, as_attachment=True)
+    # return flask.render_template("confirmation.html",
+    #                              user_name=flask.session["user_name"],
+    #                              email=flask.session["user_email"])
+    return flask.render_template("confirmation.html",
+                                     user_name=user_name,
+                                     email=user_email)
 
 
 def get_credentials():
@@ -164,10 +173,13 @@ def create_client_id_file():
             "client_secret": client_secret,
             "redirect_uris": [
                 "https://developers.google.com/oauthplayground",
-                "https://127.0.0.1:4040/login/callback"
+                "https://127.0.0.1:4040/login/callback",
+                "https://breezy-hr.herokuapp.com/oauth2callback"
+                "https://breezy-hr.herokuapp.com/login/callback"
             ],
             "javascript_origins": [
-                "https://127.0.0.1:4040"
+                "https://127.0.0.1:4040",
+                "https://breezy-hr.herokuapp.com"
             ]
         }
     }
@@ -175,10 +187,8 @@ def create_client_id_file():
         f.write(json.dumps(client_info))
     return True
 
-create_client_id_file()
-print("Client Id file created")
 
 if __name__ == '__main__':
     create_client_id_file()
     print("Client Id file created")
-    app.run(port='4040', debug=True)
+    app.run(port='4041', debug=True)

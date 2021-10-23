@@ -3,13 +3,35 @@ import flask
 import requests
 
 
-def refresh_token(user_refresh_token):
-    client_id = "885210520694-9cbpfp9iqn2e78vuchk64dpvahqabtub.apps.googleusercontent.com"
-    client_secret = "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"
-    # user_refresh_token = "1//0gZZOWPSlMJ5nCgYIARAAGBASNwF-L9IrFcAy4WwEhZ_Ova-TuBNLIWGgAFPr9TjoqtTvOvBWl_7hzmXpux1HgecBj4sDt5QN0Rc"
+def get_user_info(access_token, user_refresh_token):
+    # access_token = flask.session["access_token"]
+    r = requests.get(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            params={'access_token': access_token})
+    print("Fetching User Info")
+    print(r.status_code)
+    print(r.content)
+    if r.status_code == 401:
+        access_token = refresh_token(user_refresh_token)
+        r = requests.get(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            params={'access_token': access_token})
+        print("Fetching User Info")
+        print(r.status_code)
+        print(r.content)
 
-    # client_id = os.environ["GOOGLE_CLIENT_ID"]
-    # client_secret = os.environ["GOOGLE_CLIENT_SECRET"]
+    # name = r.json()["name"]
+    name = r.json()["email"]
+    email = r.json()["email"]
+    # flask.session["user_name"] = name
+    # flask.session["user_email"] = email
+    print(name, email)
+    return name, email
+
+
+def refresh_token(user_refresh_token):
+    client_id = os.environ["GOOGLE_CLIENT_ID"]
+    client_secret = os.environ["GOOGLE_CLIENT_SECRET"]
 
     api_url = "https://oauth2.googleapis.com/token"
     data = {
@@ -29,17 +51,17 @@ def refresh_token(user_refresh_token):
         return flask.redirect(flask.url_for('oauth2callback'))
 
 
-def upload_file_to_drive(file_name):
-    file_id = upload_file_params(file_name)
-    is_success = rename_file_params(file_id, file_name)
-    is_success = make_public_params(file_id)
-    return_url = get_file_url_params(file_id)
+def upload_file_to_drive(file_name, access_token, user_refresh_token):
+    file_id = upload_file_params(file_name, access_token, user_refresh_token)
+    is_success = rename_file_params(file_id, file_name, access_token, user_refresh_token)
+    is_success = make_public_params(file_id, access_token, user_refresh_token)
+    return_url = get_file_url_params(file_id, access_token, user_refresh_token)
     return return_url
 
 
-def upload_file_params(file_name):
-    access_token = flask.session["access_token"]
-    user_refresh_token = flask.session["user_refresh_token"]
+def upload_file_params(file_name, access_token, user_refresh_token):
+    # access_token = flask.session["access_token"]
+    # user_refresh_token = flask.session["user_refresh_token"]
     api_url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=media"
     file_path = os.path.join("resumes", file_name)
     with open(file_path, "rb") as f:
@@ -54,7 +76,7 @@ def upload_file_params(file_name):
     print(x.json())
     if x.status_code != 200:
         access_token = refresh_token(user_refresh_token)
-        flask.session["access_token"] = access_token
+        # flask.session["access_token"] = access_token
         headers = {
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/pdf"
@@ -68,9 +90,9 @@ def upload_file_params(file_name):
     return file_id
 
 
-def rename_file_params(file_id, file_name):
-    access_token = flask.session["access_token"]
-    user_refresh_token = flask.session["user_refresh_token"]
+def rename_file_params(file_id, file_name, access_token, user_refresh_token):
+    # access_token = flask.session["access_token"]
+    # user_refresh_token = flask.session["user_refresh_token"]
     api_url = "https://www.googleapis.com/drive/v3/files/" + file_id
     headers = {
         "Authorization": f"Bearer {access_token}"
@@ -82,7 +104,7 @@ def rename_file_params(file_id, file_name):
     x = requests.patch(url=api_url, headers=headers, json=data)
     if x.status_code != 200:
         access_token = refresh_token(user_refresh_token)
-        flask.session["access_token"] = access_token
+        # flask.session["access_token"] = access_token
         headers = {
             "Authorization": f"Bearer {access_token}"
         }
@@ -90,9 +112,9 @@ def rename_file_params(file_id, file_name):
     return True
 
 
-def make_public_params(file_id):
-    access_token = flask.session["access_token"]
-    user_refresh_token = flask.session["user_refresh_token"]
+def make_public_params(file_id, access_token, user_refresh_token):
+    # access_token = flask.session["access_token"]
+    # user_refresh_token = flask.session["user_refresh_token"]
     api_url = f"https://www.googleapis.com/drive/v3/files/{file_id}/permissions"
     headers = {
         "Authorization": f"Bearer {access_token}"
@@ -104,7 +126,7 @@ def make_public_params(file_id):
     x = requests.post(url=api_url, json=data, headers=headers)
     if x.status_code != 200:
         access_token = refresh_token(user_refresh_token)
-        flask.session["access_token"] = access_token
+        # flask.session["access_token"] = access_token
         headers = {
             "Authorization": f"Bearer {access_token}"
         }
@@ -112,9 +134,9 @@ def make_public_params(file_id):
     return True
 
 
-def get_file_url_params(file_id):
-    access_token = flask.session["access_token"]
-    user_refresh_token = flask.session["user_refresh_token"]
+def get_file_url_params(file_id, access_token, user_refresh_token):
+    # access_token = flask.session["access_token"]
+    # user_refresh_token = flask.session["user_refresh_token"]
     api_url = f"https://www.googleapis.com/drive/v3/files/{file_id}?fields=webViewLink,parents"
     headers = {
         "Authorization": f"Bearer {access_token}"
