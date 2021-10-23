@@ -175,6 +175,8 @@ def create_client_id_file():
         f.write(json.dumps(client_info))
     return True
 
+create_client_id_file()
+print("Client Id file created")
 
 if __name__ == '__main__':
     create_client_id_file()
