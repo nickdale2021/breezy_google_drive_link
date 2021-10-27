@@ -61,6 +61,9 @@ def process_spreadsheet(file_name, access_token, user_refresh_token, user_name, 
     if os.path.exists(os.path.join(os.getcwd(), "spreadsheets", file_name)):
         os.remove(os.path.join(os.getcwd(), "spreadsheets", file_name))
         print("Deleted file: ", os.path.join(os.getcwd(), "spreadsheets", file_name))
+    if os.path.exists(os.path.join(os.getcwd(), "spreadsheets", save_file_name)):
+        os.remove(os.path.join(os.getcwd(), "spreadsheets", save_file_name))
+        print("Deleted file: ", os.path.join(os.getcwd(), "spreadsheets", save_file_name))
     return save_file_name
 
 
