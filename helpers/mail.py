@@ -58,9 +58,9 @@ def send_mail(name, email, attachments):
     start = time.time()
     session.send_message(message)
     print("Time taken to send mail:", time.time() - start)
-    print("Email sent!")
+    print("Email sent to:", email)
     session.quit()
-    if len(attachments) > 0:
-        for i in attachments:
-            if os.path.exists(i):
-                os.remove(i)
+    # if len(attachments) > 0:
+    #     for i in attachments:
+    #         if os.path.exists(i):
+    #             os.remove(i)

@@ -68,6 +68,8 @@ def oauth2callback():
         auth_code = flask.request.args.get('code')
         credentials = flow.step2_exchange(auth_code)
         # open('credentials.json', 'w').write(credentials.to_json())  # write access token to credentials.json locally
+        print("Credentials: ")
+        print(credentials.to_json())
         flask.session['access_token'] = credentials.access_token
         flask.session["user_refresh_token"] = credentials.refresh_token
         return flask.redirect(flask.url_for('index'))

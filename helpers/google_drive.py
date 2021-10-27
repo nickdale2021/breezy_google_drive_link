@@ -23,9 +23,10 @@ def get_user_info(access_token, user_refresh_token):
     # name = r.json()["name"]
     name = r.json()["email"]
     email = r.json()["email"]
+    print("User: ", email)
     # flask.session["user_name"] = name
     # flask.session["user_email"] = email
-    print(name, email)
+    # print(name, email)
     return name, email
 
 
@@ -226,28 +227,29 @@ def get_file_url_params(file_id, access_token, user_refresh_token):
 #     return x
 #
 #
-# # def upload_file():
-# #     file = ""
-# #     api_url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=media"
-# #     # json_data = {
-# #     #     "parents": [],
-# #     #     "mimeType": "application/pdf",
-# #     #     "name": "",
-# #     #     "permissions": [{"type": "anyone"}],
-# #     #     "fileExtension": "pdf",
-# #     #     "originalFilename": ""
-# #     # }
-# #     with open(file, "rb") as f:
-# #         file_data = f.read()
-# #     headers = {
-# #         "Authorization": "Bearer ",
-# #         "Content-Type": "application/pdf"
-# #     }
-# #     # x = requests.post(url=api_url, files={"file": file}, data=json_data, headers=headers)
-# #     x = requests.post(url=api_url, data=file_data, headers=headers)
-# #     print(x.status_code)
-# #     print(x.json())
-# #     return x
+# def upload_file():
+#     file = os.path.join("..", "spreadsheets", "sample_breezy_file.csv")
+#     api_url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=media"
+#     # json_data = {
+#     #     "parents": [],
+#     #     "mimeType": "application/pdf",
+#     #     "name": "",
+#     #     "permissions": [{"type": "anyone"}],
+#     #     "fileExtension": "pdf",
+#     #     "originalFilename": ""
+#     # }
+#     with open(file, "rb") as f:
+#         file_data = f.read()
+#     access_token = ""
+#     headers = {
+#         "Authorization": f"Bearer {access_token}",
+#         "Content-Type": "application/pdf"
+#     }
+#     # x = requests.post(url=api_url, files={"file": file}, data=json_data, headers=headers)
+#     x = requests.post(url=api_url, data=file_data, headers=headers)
+#     print(x.status_code)
+#     print(x.json())
+#     return x
 #
 #
 # def make_public():
@@ -330,7 +332,6 @@ def get_file_url_params(file_id, access_token, user_refresh_token):
 
 
 # if __name__ == "__main__":
-#     refresh_token()
     # upload_file_2()
     # upload_file()
     # rename_file()
