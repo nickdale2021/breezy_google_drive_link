@@ -84,6 +84,10 @@ def process_excel():
     # access_token = encryption.decrypt(access_token)
     access_token = flask.session["access_token"]
     user_refresh_token = flask.session["user_refresh_token"]
+    if access_token is None:
+        return flask.redirect(flask.url_for('oauth2callback'))
+    if user_refresh_token is None:
+        return flask.redirect(flask.url_for('oauth2callback'))
     received_file = flask.request.files["file"]
     directory = "spreadsheets"
     # print(flask.request.form)
