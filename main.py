@@ -91,6 +91,8 @@ def process_excel():
     received_file.save(os.path.join(directory, file_name))
     # new_file_name = file_processor.process_spreadsheet(file_name)
     user_name, user_email = google_drive.get_user_info(access_token, user_refresh_token)
+    if user_name is False:
+        return flask.redirect(flask.url_for('oauth2callback'))
     file_processor.file_handler(file_name, access_token, user_refresh_token, user_name, user_email)
     # new_file_name = file_name
     # return flask.send_from_directory(directory, new_file_name, as_attachment=True)

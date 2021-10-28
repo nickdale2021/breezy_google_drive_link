@@ -4,6 +4,8 @@ import requests
 
 
 def get_user_info(access_token, user_refresh_token):
+    print("Access Token:", access_token)
+    print("Refresh Token:", user_refresh_token)
     # access_token = flask.session["access_token"]
     r = requests.get(
             'https://www.googleapis.com/oauth2/v3/userinfo',
@@ -13,6 +15,8 @@ def get_user_info(access_token, user_refresh_token):
     print(r.content)
     if r.status_code == 401:
         access_token = refresh_token(user_refresh_token)
+        if r is False:
+            return False, False
         r = requests.get(
             'https://www.googleapis.com/oauth2/v3/userinfo',
             params={'access_token': access_token})
@@ -31,6 +35,7 @@ def get_user_info(access_token, user_refresh_token):
 
 
 def refresh_token(user_refresh_token):
+
     client_id = os.environ["GOOGLE_CLIENT_ID"]
     client_secret = os.environ["GOOGLE_CLIENT_SECRET"]
 
@@ -41,15 +46,17 @@ def refresh_token(user_refresh_token):
         "grant_type": "refresh_token",
         "refresh_token": user_refresh_token
     }
+    print("Refreshing Token!")
+    print("Data: ", data)
     x = requests.post(url=api_url, data=data)
-    print("Refreshing Token: ", end=" ")
+
     print(x.status_code)
     print(x.json())
     if x.status_code == 200:
         return x.json()["access_token"]
     else:
         print("Access Token expired. Need to login again!")
-        return flask.redirect(flask.url_for('oauth2callback'))
+        return False
 
 
 def upload_file_to_drive(file_name, access_token, user_refresh_token):
