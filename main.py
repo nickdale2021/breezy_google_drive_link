@@ -107,8 +107,8 @@ def process_excel():
     #                              user_name=flask.session["user_name"],
     #                              email=flask.session["user_email"])
     return flask.render_template("confirmation.html",
-                                     user_name=user_name,
-                                     email=user_email)
+                                 user_name=user_name,
+                                 email=user_email)
 
 
 def get_credentials():
