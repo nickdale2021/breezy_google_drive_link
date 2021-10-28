@@ -59,7 +59,10 @@ def oauth2callback():
     flow = client.flow_from_clientsecrets('client_id.json',
                                           scope=['https://www.googleapis.com/auth/drive',
                                                  'https://www.googleapis.com/auth/userinfo.email'],
-                                          redirect_uri=flask.url_for('oauth2callback', _external=True, _scheme='https'))
+                                          redirect_uri=flask.url_for('oauth2callback',
+                                                                     _external=True,
+                                                                     _scheme='https'),
+                                          prompt="consent")
     flow.params['include_granted_scopes'] = 'true'
     if 'code' not in flask.request.args:
         auth_uri = flow.step1_get_authorize_url()
