@@ -152,7 +152,7 @@ def get_file_url_params(file_id, access_token, user_refresh_token):
     x = requests.get(url=api_url, headers=headers)
     if x.status_code != 200:
         access_token = refresh_token(user_refresh_token)
-        flask.session["access_token"] = access_token
+        # flask.session["access_token"] = access_token
         headers = {
             "Authorization": f"Bearer {access_token}"
         }

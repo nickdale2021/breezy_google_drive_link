@@ -91,6 +91,11 @@ def process_excel():
         return flask.redirect(flask.url_for('oauth2callback', _external=True, _scheme='https'))
     if user_refresh_token is None:
         return flask.redirect(flask.url_for('oauth2callback', _external=True, _scheme='https'))
+    access_token = google_drive.refresh_token(user_refresh_token)
+    if access_token is False:
+        return flask.redirect(flask.url_for('oauth2callback', _external=True, _scheme='https'))
+    else:
+        flask.session["access_token"] = access_token
     received_file = flask.request.files["file"]
     directory = "spreadsheets"
     # print(flask.request.form)
