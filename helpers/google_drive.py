@@ -31,7 +31,7 @@ def get_user_info(access_token, user_refresh_token):
     # flask.session["user_name"] = name
     # flask.session["user_email"] = email
     # print(name, email)
-    return name, email
+    return name, email, access_token
 
 
 def refresh_token(user_refresh_token):
@@ -60,10 +60,10 @@ def refresh_token(user_refresh_token):
 
 
 def upload_file_to_drive(file_name, access_token, user_refresh_token):
-    file_id = upload_file_params(file_name, access_token, user_refresh_token)
-    is_success = rename_file_params(file_id, file_name, access_token, user_refresh_token)
-    is_success = make_public_params(file_id, access_token, user_refresh_token)
-    return_url = get_file_url_params(file_id, access_token, user_refresh_token)
+    file_id, access_token = upload_file_params(file_name, access_token, user_refresh_token)
+    is_success, access_token = rename_file_params(file_id, file_name, access_token, user_refresh_token)
+    is_success, access_token = make_public_params(file_id, access_token, user_refresh_token)
+    return_url, access_token = get_file_url_params(file_id, access_token, user_refresh_token)
     return return_url
 
 
@@ -95,7 +95,7 @@ def upload_file_params(file_name, access_token, user_refresh_token):
         print(x.json())
     file_id = x.json()["id"]
     os.remove(file_path)
-    return file_id
+    return file_id, access_token
 
 
 def rename_file_params(file_id, file_name, access_token, user_refresh_token):
@@ -117,7 +117,7 @@ def rename_file_params(file_id, file_name, access_token, user_refresh_token):
             "Authorization": f"Bearer {access_token}"
         }
         x = requests.patch(url=api_url, headers=headers, json=data)
-    return True
+    return True, access_token
 
 
 def make_public_params(file_id, access_token, user_refresh_token):
@@ -139,7 +139,7 @@ def make_public_params(file_id, access_token, user_refresh_token):
             "Authorization": f"Bearer {access_token}"
         }
         x = requests.post(url=api_url, json=data, headers=headers)
-    return True
+    return True, access_token
 
 
 def get_file_url_params(file_id, access_token, user_refresh_token):
@@ -158,7 +158,7 @@ def get_file_url_params(file_id, access_token, user_refresh_token):
         }
         x = requests.get(url=api_url, headers=headers)
 
-    return x.json()["webViewLink"]
+    return x.json()["webViewLink"], access_token
 
 
 # def upload_file():
