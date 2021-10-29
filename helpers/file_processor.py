@@ -9,6 +9,8 @@ from threading import Thread
 
 
 def get_new_url(my_session, old_url, access_token, user_refresh_token):
+    if old_url == "":
+        return ""
     result = breezy.download_file_single_session(my_session, old_url)
     if result[1] is False:
         new_url = "Unable to open resume link"
@@ -49,6 +51,7 @@ def process_spreadsheet(file_name, access_token, user_refresh_token, user_name, 
     else:
         # Considering Excel file (xlsx)
         df = pd.read_excel(file_path)
+    df = df.fillna("")
     df["resume permalink"] = df["resume"].apply(lambda x: get_new_url(my_session, x, access_token, user_refresh_token))
     save_file_name = "Updated_" + file_name
     save_file_path = os.path.join("spreadsheets", save_file_name)

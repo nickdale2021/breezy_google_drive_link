@@ -31,8 +31,8 @@ def download_file(file_url_breezy):
     :return:
     """
     my_session = sign_in()
-    doc_file_name = file_url_breezy.split("/")[-1]
-    y = my_session.get(url=file_url_breezy)
+    doc_file_name = str(file_url_breezy).split("/")[-1]
+    y = my_session.get(url=str(file_url_breezy))
     if y.status_code == 401:
         return ["Unauthorised", False]
     elif y.status_code != 200:
@@ -55,7 +55,7 @@ def download_file_single_session(my_session, file_url_breezy):
     :param file_url_breezy: URL of the file to be downloaded
     :return:
     """
-    doc_file_name = file_url_breezy.split("/")[-1]
+    doc_file_name = str(file_url_breezy).split("/")[-1]
     y = my_session.get(url=file_url_breezy)
     if y.status_code == 401:
         return ["Unauthorised", False]
