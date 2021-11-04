@@ -1,2 +1,4 @@
 config.txt
 .idea/
+spreadsheets/dump/
+helpers/__pycache__/

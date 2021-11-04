@@ -209,3 +209,8 @@ if __name__ == '__main__':
     create_client_id_file()
     print("Client Id file created")
     app.run(port='4041', debug=True)
+
+    # if __name__ == "__main__":
+    # file_processor.process_spreadsheet("10282021_Candidates.csv", "", "", "", "")
+    # file_processor.process_spreadsheet("10282021_Candidates_subset.csv", "", "", "", "")
+
