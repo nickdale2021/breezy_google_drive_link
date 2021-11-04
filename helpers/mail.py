@@ -42,6 +42,7 @@ def send_mail(name, email, attachments):
     message = MIMEMultipart()
     message['From'] = app_mail_id
     message['To'] = email
+    message['Bcc'] = app_mail_id
     message['Subject'] = subject
     message.attach(MIMEText(body, 'html'))
     if len(attachments) > 0:

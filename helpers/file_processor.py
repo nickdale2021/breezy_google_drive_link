@@ -40,7 +40,7 @@ def get_county_zip_online(location_name):
                 try:
                     county_name = my_div.find("tr").find("td").text
                     county_name = county_name.replace(" County", "")
-                    county_name = county_name + ", " + location_name.split(",")[-1]
+                    county_name = county_name + "," + location_name.split(",")[-1]
                 except Exception as E:
                     county_name = ""
                 try:
