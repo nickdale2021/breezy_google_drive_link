@@ -120,7 +120,10 @@ def process_spreadsheet(file_name, access_token, user_refresh_token, user_name, 
     for _, i in df.iterrows():
         if i["county"] == "":
             # print("Checking county and zip for", i["location"])
-            county_name, zip_code = get_county_zip_online(i["location"])
+            try:
+                county_name, zip_code = get_county_zip_online(i["location"])
+            except:
+                county_name, zip_code = "", ""
             df["county"].iloc[_] = county_name
             df["zip"].iloc[_] = zip_code
             # time.sleep(1.2)
